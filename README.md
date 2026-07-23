@@ -12,6 +12,19 @@ keys in comments below are illustrative, not the real deployment.
 
 ---
 
+<p align="center">
+  <img src="assets/hero-record.png" width="49%" alt="Recording / upload screen" />
+  <img src="assets/settings.png" width="49%" alt="Settings — account, subscription, workspace" />
+</p>
+<p align="center">
+  <img src="assets/transcript.png" width="49%" alt="Speaker-labeled transcript view" />
+  <img src="assets/summary.png" width="49%" alt="AI-generated summary with detail/focus controls" />
+</p>
+
+<sub>Transcript and summary content is blurred — it's from a real user call.</sub>
+
+---
+
 ## What it does
 
 - **Record in-browser** — mixes microphone + shared tab/system audio into a
