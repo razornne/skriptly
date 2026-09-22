@@ -18,11 +18,13 @@ jobs:
       # The logic under test — chunk planning, the word-level merger, loop
       # collapse, map-reduce windowing, the speaker clustering rules — is pure
       # Python over plain data structures. No whisper, no pyannote, no GPU, no
-      # network. Four of the six files reach it through `modal_app`, which
-      # imports the Modal client at module level, so that one small pure-Python
-      # package is installed and nothing else is.
-      - name: Install the one import the tests reach through
-        run: pip install --quiet modal
+      # network and no model weights. What it does need is the handful of
+      # imports it reaches through: `modal_app` pulls in the Modal client at
+      # module level, and the clustering routine uses numpy. Those two, and
+      # nothing else — installing the real requirements.txt would drag in
+      # whisper and pyannote to test arithmetic.
+      - name: Install what the tests reach through
+        run: pip install --quiet modal numpy
 
       - name: Tests
         run: |
