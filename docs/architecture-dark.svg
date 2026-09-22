@@ -1,0 +1,70 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="900" height="760" viewBox="0 0 900 760" role="img" aria-label="Skriptly architecture: the browser records or uploads audio and sends it with a JWT straight to a Flask container, which checks the plan, injects the user's vocabulary and routes on duration. Short recordings go to one GPU worker; long ones go to a CPU orchestrator that splits them at silences and fans the chunks out across several GPUs, then re-identifies speakers globally. Every worker runs preprocess, whisper, diarization, merge and LLM correction. Results and learned vocabulary persist in Postgres.">
+<defs><marker id="a" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#9198a1"/></marker><marker id="b" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#4493f8"/></marker></defs>
+<rect width="900" height="760" fill="#0d1117"/>
+<path d="M165,282 H635" stroke="#9198a1" stroke-width="1.5" fill="none"/>
+<path d="M516,514 V532 H754 V514" stroke="#9198a1" stroke-width="1.5" fill="none"/>
+<path d="M635,632 V646 H212" stroke="#9198a1" stroke-width="1.5" fill="none"/>
+<path d="M250,408 V462" stroke="#4493f8" stroke-width="1.5" fill="none" stroke-dasharray="5 4" marker-end="url(#b)"/>
+<path d="M40,690 H16 V196 H272" stroke="#4493f8" stroke-width="1.5" fill="none" stroke-dasharray="5 4" marker-end="url(#b)"/>
+<path d="M450,102 L450,158" stroke="#9198a1" stroke-width="1.5" fill="none" marker-end="url(#a)"/>
+<path d="M450,256 L450,278" stroke="#9198a1" stroke-width="1.5" fill="none" marker-end="url(#a)"/>
+<path d="M165,286 L165,324" stroke="#9198a1" stroke-width="1.5" fill="none" marker-end="url(#a)"/>
+<path d="M635,286 L635,324" stroke="#9198a1" stroke-width="1.5" fill="none" marker-end="url(#a)"/>
+<path d="M516,422 L516,454" stroke="#9198a1" stroke-width="1.5" fill="none" marker-end="url(#a)"/>
+<path d="M635,422 L635,454" stroke="#9198a1" stroke-width="1.5" fill="none" marker-end="url(#a)"/>
+<path d="M754,422 L754,454" stroke="#9198a1" stroke-width="1.5" fill="none" marker-end="url(#a)"/>
+<path d="M635,532 L635,548" stroke="#9198a1" stroke-width="1.5" fill="none" marker-end="url(#a)"/>
+<path d="M70,408 L70,652" stroke="#9198a1" stroke-width="1.5" fill="none" marker-end="url(#a)"/>
+<path d="M212,646 L212,652" stroke="#9198a1" stroke-width="1.5" fill="none" marker-end="url(#a)"/>
+<path d="M388,695 L462,695" stroke="#9198a1" stroke-width="1.5" fill="none" marker-end="url(#a)"/>
+<rect x="310" y="28" width="280" height="74" rx="6" fill="#161b22" stroke="#30363d" stroke-width="1"/>
+<text x="323" y="50" font-family="system-ui, -apple-system, 'Segoe UI', Helvetica, Arial, sans-serif" font-size="13.5" font-weight="600" fill="#e6edf3">Browser</text>
+<text x="323" y="68" font-family="ui-monospace, SFMono-Regular, 'SF Mono', Menlo, Consolas, monospace" font-size="10.5" fill="#9198a1">record or upload · mic + tab audio</text>
+<text x="323" y="83" font-family="ui-monospace, SFMono-Regular, 'SF Mono', Menlo, Consolas, monospace" font-size="10.5" fill="#9198a1">MediaRecorder → IndexedDB autosave</text>
+<rect x="280" y="166" width="340" height="90" rx="6" fill="#121d2f" stroke="#4493f8" stroke-width="1"/>
+<text x="293" y="188" font-family="system-ui, -apple-system, 'Segoe UI', Helvetica, Arial, sans-serif" font-size="13.5" font-weight="600" fill="#e6edf3">Flask API</text>
+<text x="293" y="206" font-family="ui-monospace, SFMono-Regular, 'SF Mono', Menlo, Consolas, monospace" font-size="10.5" fill="#9198a1">CPU container · scales to zero</text>
+<text x="293" y="221" font-family="ui-monospace, SFMono-Regular, 'SF Mono', Menlo, Consolas, monospace" font-size="10.5" fill="#9198a1">verify JWT · check plan · inject vocabulary</text>
+<text x="293" y="236" font-family="ui-monospace, SFMono-Regular, 'SF Mono', Menlo, Consolas, monospace" font-size="10.5" fill="#9198a1">route on duration</text>
+<rect x="40" y="332" width="250" height="76" rx="6" fill="#1d1327" stroke="#ab7df8" stroke-width="1"/>
+<text x="53" y="354" font-family="system-ui, -apple-system, 'Segoe UI', Helvetica, Arial, sans-serif" font-size="13.5" font-weight="600" fill="#e6edf3">GPU worker</text>
+<text x="53" y="372" font-family="ui-monospace, SFMono-Regular, 'SF Mono', Menlo, Consolas, monospace" font-size="10.5" fill="#9198a1">transcribe_full</text>
+<text x="53" y="387" font-family="ui-monospace, SFMono-Regular, 'SF Mono', Menlo, Consolas, monospace" font-size="10.5" fill="#9198a1">one container, whole file</text>
+<rect x="470" y="332" width="330" height="90" rx="6" fill="#161b22" stroke="#30363d" stroke-width="1"/>
+<text x="483" y="354" font-family="system-ui, -apple-system, 'Segoe UI', Helvetica, Arial, sans-serif" font-size="13.5" font-weight="600" fill="#e6edf3">CPU orchestrator</text>
+<text x="483" y="372" font-family="ui-monospace, SFMono-Regular, 'SF Mono', Menlo, Consolas, monospace" font-size="10.5" fill="#9198a1">silence-aware split, ≤10 chunks</text>
+<text x="483" y="387" font-family="ui-monospace, SFMono-Regular, 'SF Mono', Menlo, Consolas, monospace" font-size="10.5" fill="#9198a1">parallel fan-out, one container per chunk</text>
+<text x="483" y="402" font-family="ui-monospace, SFMono-Regular, 'SF Mono', Menlo, Consolas, monospace" font-size="10.5" fill="#9198a1">a failed chunk becomes a gap, not a failed job</text>
+<rect x="470" y="462" width="92" height="52" rx="6" fill="#1d1327" stroke="#ab7df8" stroke-width="1"/>
+<text x="483" y="484" font-family="system-ui, -apple-system, 'Segoe UI', Helvetica, Arial, sans-serif" font-size="11.5" font-weight="600" fill="#e6edf3">GPU</text>
+<text x="483" y="502" font-family="ui-monospace, SFMono-Regular, 'SF Mono', Menlo, Consolas, monospace" font-size="10.5" fill="#9198a1">chunk 1</text>
+<rect x="589" y="462" width="92" height="52" rx="6" fill="#1d1327" stroke="#ab7df8" stroke-width="1"/>
+<text x="602" y="484" font-family="system-ui, -apple-system, 'Segoe UI', Helvetica, Arial, sans-serif" font-size="11.5" font-weight="600" fill="#e6edf3">GPU</text>
+<text x="602" y="502" font-family="ui-monospace, SFMono-Regular, 'SF Mono', Menlo, Consolas, monospace" font-size="10.5" fill="#9198a1">chunk 2</text>
+<rect x="708" y="462" width="92" height="52" rx="6" fill="#1d1327" stroke="#ab7df8" stroke-width="1"/>
+<text x="721" y="484" font-family="system-ui, -apple-system, 'Segoe UI', Helvetica, Arial, sans-serif" font-size="11.5" font-weight="600" fill="#e6edf3">GPU</text>
+<text x="721" y="502" font-family="ui-monospace, SFMono-Regular, 'SF Mono', Menlo, Consolas, monospace" font-size="10.5" fill="#9198a1">chunk n</text>
+<rect x="470" y="556" width="330" height="76" rx="6" fill="#121d2f" stroke="#4493f8" stroke-width="1"/>
+<text x="483" y="578" font-family="system-ui, -apple-system, 'Segoe UI', Helvetica, Arial, sans-serif" font-size="13.5" font-weight="600" fill="#e6edf3">global speaker stitching</text>
+<text x="483" y="596" font-family="ui-monospace, SFMono-Regular, 'SF Mono', Menlo, Consolas, monospace" font-size="10.5" fill="#9198a1">voice embeddings + agglomerative</text>
+<text x="483" y="611" font-family="ui-monospace, SFMono-Regular, 'SF Mono', Menlo, Consolas, monospace" font-size="10.5" fill="#9198a1">clustering with a cannot-link rule</text>
+<rect x="120" y="462" width="300" height="96" rx="6" fill="#0d1117" stroke="#30363d" stroke-width="1" stroke-dasharray="4 3"/>
+<text x="133" y="484" font-family="system-ui, -apple-system, 'Segoe UI', Helvetica, Arial, sans-serif" font-size="13.5" font-weight="600" fill="#9198a1">inside every GPU worker</text>
+<text x="133" y="502" font-family="ui-monospace, SFMono-Regular, 'SF Mono', Menlo, Consolas, monospace" font-size="10.5" fill="#9198a1">ffmpeg preprocess  →  whisper</text>
+<text x="133" y="517" font-family="ui-monospace, SFMono-Regular, 'SF Mono', Menlo, Consolas, monospace" font-size="10.5" fill="#9198a1">→  pyannote diarize  →  merge</text>
+<text x="133" y="532" font-family="ui-monospace, SFMono-Regular, 'SF Mono', Menlo, Consolas, monospace" font-size="10.5" fill="#9198a1">→  LLM correction (+ new vocab)</text>
+<rect x="40" y="660" width="340" height="70" rx="6" fill="#161b22" stroke="#30363d" stroke-width="1"/>
+<text x="53" y="682" font-family="system-ui, -apple-system, 'Segoe UI', Helvetica, Arial, sans-serif" font-size="13.5" font-weight="600" fill="#e6edf3">Postgres · row-level security</text>
+<text x="53" y="700" font-family="ui-monospace, SFMono-Regular, 'SF Mono', Menlo, Consolas, monospace" font-size="10.5" fill="#9198a1">transcripts · workspaces</text>
+<text x="53" y="715" font-family="ui-monospace, SFMono-Regular, 'SF Mono', Menlo, Consolas, monospace" font-size="10.5" fill="#9198a1">per-user vocabulary</text>
+<rect x="470" y="660" width="330" height="70" rx="6" fill="#161b22" stroke="#30363d" stroke-width="1"/>
+<text x="483" y="682" font-family="system-ui, -apple-system, 'Segoe UI', Helvetica, Arial, sans-serif" font-size="13.5" font-weight="600" fill="#e6edf3">summary · action items</text>
+<text x="483" y="700" font-family="ui-monospace, SFMono-Regular, 'SF Mono', Menlo, Consolas, monospace" font-size="10.5" fill="#9198a1">separate CPU container, cloud LLM</text>
+<text x="466" y="128" font-family="ui-monospace, SFMono-Regular, 'SF Mono', Menlo, Consolas, monospace" font-size="10.5" fill="#9198a1">JWT · audio goes straight to the backend,</text>
+<text x="466" y="143" font-family="ui-monospace, SFMono-Regular, 'SF Mono', Menlo, Consolas, monospace" font-size="10.5" fill="#9198a1">not through the CDN proxy</text>
+<text x="108" y="306" font-family="ui-monospace, SFMono-Regular, 'SF Mono', Menlo, Consolas, monospace" font-size="11" fill="#9198a1">&lt; 30 min</text>
+<text x="578" y="306" font-family="ui-monospace, SFMono-Regular, 'SF Mono', Menlo, Consolas, monospace" font-size="11" fill="#9198a1">&gt; 30 min</text>
+<text x="30" y="176" font-family="ui-monospace, SFMono-Regular, 'SF Mono', Menlo, Consolas, monospace" font-size="10" fill="#9198a1">the vocabulary a correction learns is</text>
+<text x="30" y="188" font-family="ui-monospace, SFMono-Regular, 'SF Mono', Menlo, Consolas, monospace" font-size="10" fill="#9198a1">prepended to the next transcription</text>
+<text x="392" y="686" font-family="ui-monospace, SFMono-Regular, 'SF Mono', Menlo, Consolas, monospace" font-size="10" fill="#9198a1">on request</text>
+</svg>

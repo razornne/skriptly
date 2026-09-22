@@ -1,0 +1,28 @@
+name: CI
+
+on:
+  push:
+    branches: [master, main]
+  pull_request:
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v5
+
+      - uses: actions/setup-python@v6
+        with:
+          python-version: "3.11"
+
+      # No install step on purpose. The logic worth testing here — chunk
+      # planning, the word-level merger, loop collapse, map-reduce windowing
+      # and the speaker clustering rules — is pure Python over plain data
+      # structures. It does not need whisper, pyannote or a GPU to run, and
+      # keeping it that way is what makes it testable at all.
+      - name: Tests
+        run: |
+          for t in tests/test_*.py; do
+            echo "── $t"
+            python "$t"
+          done

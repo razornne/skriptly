@@ -1,5 +1,9 @@
 # Skriptly
 
+[![CI](https://github.com/razornne/skriptly/actions/workflows/ci.yml/badge.svg)](https://github.com/razornne/skriptly/actions/workflows/ci.yml)
+[![Python 3.11+](https://img.shields.io/badge/python-3.11%2B-blue)](https://www.python.org/downloads/)
+[![License: MIT](https://img.shields.io/badge/license-MIT-green)](LICENSE)
+
 Cloud call-transcription platform with speaker diarization and LLM-powered
 post-processing. Record or upload a call, get a speaker-labeled transcript,
 an AI summary, and action items — in Ukrainian, Russian, English, or Polish.
@@ -58,31 +62,13 @@ keys in comments below are illustrative, not the real deployment.
 
 ## Architecture
 
-```
-Browser
-  │ record / upload
-  ▼
-Next.js frontend (Vercel)
-  │ JWT auth, direct-to-backend fetch (bypasses proxy body-size limits)
-  ▼
-Flask API (serverless CPU container)
-  │ JWT verification, plan/usage checks, request routing by duration
-  ▼
-  ├─ short recordings ──────► GPU worker: monolithic pipeline
-  │                            (preprocess → whisper → diarize → merge → correct)
-  │
-  └─ long recordings ───────► CPU orchestrator
-                                │ split into chunks (silence-aware)
-                                ▼
-                               GPU workers (parallel, one per chunk)
-                                │ each: whisper → diarize → merge → correct
-                                │       + speaker embeddings
-                                ▼
-                               global speaker clustering + stitch + re-merge
+<picture>
+  <source media="(prefers-color-scheme: dark)" srcset="docs/architecture-dark.svg">
+  <img alt="The browser records or uploads audio and sends it with a JWT straight to a Flask container, bypassing the CDN proxy. Flask verifies the token, checks the plan, injects the user's learned vocabulary and routes on duration: short recordings go to a single GPU worker, long ones to a CPU orchestrator that splits at silences and fans chunks out across several GPUs before re-identifying speakers globally. Every worker runs ffmpeg preprocessing, whisper, diarization, merge and LLM correction. Transcripts and newly learned vocabulary persist in Postgres with row-level security." src="docs/architecture-light.svg" width="900">
+</picture>
 
-Postgres (RLS)
-  └─ transcripts, user profiles, per-user vocabulary, workspaces
-```
+<sub>Both themes are generated from one definition by
+<code>docs/make_diagram.py</code> — two hand-drawn files drift.</sub>
 
 The backend is stateless — it only processes audio and validates tokens.
 All persistent state lives in Postgres. GPU workers scale to zero when idle;
@@ -130,6 +116,50 @@ window.
 is wrapped so a single chunk failure (after retries) doesn't fail the whole
 job — it's logged, skipped, and replaced with a localized gap marker in the
 transcript, and the job still completes with the rest of the audio intact.
+
+---
+
+## Where this is going
+
+The product works and has paying users; what follows is shaped by what those
+users actually hit, not by what is interesting to build.
+
+**From batch to streaming.** Today the whole thing is batch: record or upload,
+wait, read. That is the right shape for a 3-hour workshop and the wrong one for
+a 20-minute standup you want to act on immediately. Streaming is not a feature
+bolted onto this pipeline — it inverts it. Diarization currently gets the whole
+file and can reason globally about who spoke; a streaming version has to commit
+to a speaker label before it has heard the rest of the call, and revise. The
+interesting question is not latency, it is what you do when a revision
+contradicts something the user has already read.
+
+**The correction loop should train the model, not just the prompt.** Every
+correction a user accepts is already stored as a wrong→right pair and fed back
+into the next transcription's prompt. That is a cheap, immediate win and a
+ceiling: prompting can only bias the decoder. The same pairs are training data
+for a fine-tune on the languages where off-the-shelf Whisper is weakest —
+Ukrainian and Russian in this user base. The flywheel exists; it currently
+turns one notch and stops.
+
+**Search across the archive, not within one transcript.** Users accumulate
+hundreds of calls and then cannot find the one where a decision was made.
+Transcripts already sit in Postgres, so this is embeddings and pgvector over
+data that is already there — the work is in making "which call was that in?"
+answerable without reading ten of them.
+
+**Cost and quality as a tracked number.** There is a WER and deletion-rate
+evaluation set, which is what stopped tuning decisions from being guesses. It
+does not yet track cost per minute alongside quality, and those two move
+together every time a model is swapped. Without both on the same chart, "we
+improved quality" and "we doubled the bill" are indistinguishable.
+
+**The unglamorous one.** Billing moves to a Merchant-of-Record provider. It
+changes nothing technically interesting and it is the difference between taking
+money legally in thirty countries and not.
+
+Things deliberately not being built: a mobile app (the browser handles the
+recording cases that matter), and real-time translation (a different product
+wearing this one's clothes).
 
 ---
 
